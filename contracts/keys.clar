@@ -73,6 +73,19 @@
   (>= (default-to u0 (map-get? keysBalance { subject: subject, holder: holder })) u1)
 )
 
+;; Starter challenge: Balance and Supply Query Functions
+;; Balance Query Function
+(define-read-only (get-keys-balance (subject principal) (holder principal))
+  ;; Return the keysBalance for the given subject and holder
+  (map-get? keysBalance { subject: subject, holder: holder })
+)
+
+;; Supply Query Function
+(define-read-only (get-keys-supply (subject principal))
+  ;; Return the keysSupply for the given subject
+  (map-get? keysSupply { subject: subject })
+)
+
 ;; title: keys
 ;; version:
 ;; summary:
