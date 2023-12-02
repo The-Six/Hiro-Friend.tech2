@@ -73,7 +73,7 @@
   (>= (default-to u0 (map-get? keysBalance { subject: subject, holder: holder })) u1)
 )
 
-;; Starter challenge: Balance and Supply Query Functions
+;; Challenge 1: Balance and Supply Query Functions
 ;; Balance Query Function
 (define-read-only (get-keys-balance (subject principal) (holder principal))
   ;; Return the keysBalance for the given subject and holder
@@ -85,6 +85,34 @@
   ;; Return the keysSupply for the given subject
   (map-get? keysSupply { subject: subject })
 )
+
+;; Challenge 1 end.
+
+;; Challenge 2: Price Query Functions
+
+(define-read-only (get-buy-price (subject principal) (amount uint))
+  ;; Implement buy price logic
+  (let
+    (
+      (supply (default-to u0 (map-get? keysSupply { subject: subject })))
+      (price (get-price supply amount))
+    )
+    price
+  )
+)
+
+(define-read-only (get-sell-price (subject principal) (amount uint))
+  ;; Implement sell price logic
+  (let
+    (
+      (supply (default-to u0 (map-get? keysSupply { subject: subject })))
+      (price (get-price supply amount))
+    )
+    price
+  )
+)
+
+;; Challenge 2 end.
 
 ;; title: keys
 ;; version:
