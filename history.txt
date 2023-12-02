@@ -10,3 +10,22 @@
 (contract-call? .keys is-keyholder tx-sender  'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
 get-keys-balance
 get-keys-supply
+(contract-call? .keys get-keys-balance)
+::help
+::functions
+(contract-call? .keys get-keys-balance 10 12)
+(contract-call? .keys get-keys-balance 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys)
+(contract-call? .keys get-keys-supply 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys)
+(contract-call? .keys get-buy-price 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys u5)
+(contract-call? .keys get-buy-price 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys u10)
+(contract-call? .keys get-buy-price 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys u30)
+(contract-call? .keys get-buy-price 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys u40)
+(contract-call? .keys get-sell-price 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys u40)
+(contract-call? .keys get-price 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys u5)
+(contract-call? .keys get-price u2 u5)
+(contract-call? .keys get-price u10 u10)
+(contract-call? .keys get-price u0 u10)
+(contract-call? .keys get-price u0 u5)
+(contract-call? .keys get-price u0 u30)
+(contract-call? .keys buy-keys 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys u5)
+(contract-call? .keys buy-keys 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys u400)

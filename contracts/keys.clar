@@ -2,6 +2,10 @@
 (define-map keysBalance { subject: principal, holder: principal } uint)
 (define-map keysSupply { subject: principal } uint)
 
+;; Change the fee values as you wish
+(define-data-var protocolFeePercent uint u200) ;; or subjectFeePercent
+(define-data-var protocolFeeDestination principal tx-sender)
+
 ;; Calculating Key Prices
 (define-read-only (get-price (supply uint) (amount uint))
   (let
@@ -19,11 +23,14 @@
   (let
     (
       (supply (default-to u0 (map-get? keysSupply { subject: subject })))
+      ;; Challenge 3: Fee Management
       (price (get-price supply amount))
+      (fee (* price (var-get protocolFeePercent) u100))
+      (totalPrice (+ price fee))
     )
     (if (or (> supply u0) (is-eq tx-sender subject))
       (begin
-        (match (stx-transfer? price tx-sender (as-contract tx-sender))
+        (match (stx-transfer? totalPrice (var-get protocolFeeDestination) (as-contract tx-sender))
           success
           (begin
             (map-set keysBalance { subject: subject, holder: tx-sender }
@@ -47,12 +54,15 @@
     (
       (balance (default-to u0 (map-get? keysBalance { subject: subject, holder: tx-sender })))
       (supply (default-to u0 (map-get? keysSupply { subject: subject })))
+      ;; Challenge 3: Fee Management
       (price (get-price supply amount))
+      (fee (* price (var-get protocolFeePercent) u100))
+      (totalPrice (+ price fee))
       (recipient tx-sender)
     )
     (if (and (>= balance amount) (or (> supply u0) (is-eq tx-sender subject)))
       (begin
-        (match (as-contract (stx-transfer? price tx-sender recipient))
+        (match (as-contract (stx-transfer? totalPrice (var-get protocolFeeDestination) recipient))
           success
           (begin
             (map-set keysBalance { subject: subject, holder: tx-sender } (- balance amount))
