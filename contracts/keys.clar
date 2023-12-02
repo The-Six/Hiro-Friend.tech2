@@ -1,6 +1,8 @@
+;; Defining Key Balances and Supply
 (define-map keysBalance { subject: principal, holder: principal } uint)
 (define-map keysSupply { subject: principal } uint)
 
+;; Calculating Key Prices
 (define-read-only (get-price (supply uint) (amount uint))
   (let
     (
@@ -12,6 +14,7 @@
   )
 )
 
+;; Creating buying keys
 (define-public (buy-keys (subject principal) (amount uint))
   (let
     (
@@ -38,6 +41,7 @@
   )
 )
 
+;; Creating selling keys
 (define-public (sell-keys (subject principal) (amount uint))
   (let
     (
@@ -64,9 +68,11 @@
   )
 )
 
+;; Verifying Keyholders
 (define-read-only (is-keyholder (subject principal) (holder principal))
   (>= (default-to u0 (map-get? keysBalance { subject: subject, holder: holder })) u1)
 )
+
 ;; title: keys
 ;; version:
 ;; summary:
