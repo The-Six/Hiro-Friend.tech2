@@ -30,7 +30,7 @@
     )
     (if (or (> supply u0) (is-eq tx-sender subject))
       (begin
-        (match (stx-transfer? totalPrice (var-get protocolFeeDestination) (as-contract tx-sender))
+        (match (stx-transfer? totalPrice (var-get protocolFeeDestination) (as-contract (var-get protocolFeeDestination)))
           success
           (begin
             (map-set keysBalance { subject: subject, holder: tx-sender }
@@ -58,7 +58,7 @@
       (price (get-price supply amount))
       (fee (* price (var-get protocolFeePercent) u100))
       (totalPrice (+ price fee))
-      (recipient tx-sender)
+      (recipient (var-get protocolFeeDestination))
     )
     (if (and (>= balance amount) (or (> supply u0) (is-eq tx-sender subject)))
       (begin
