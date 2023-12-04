@@ -100,6 +100,8 @@ function App(): ReactElement {
     }
   };
 
+  // Challenge 6 start: Message Signature
+
   const checkIsKeyHolder = async (senderAddress: string) => {
     // Define your contract details here
     // Challenge 5: UI Integration
@@ -133,7 +135,6 @@ function App(): ReactElement {
     }
   };
 
-  // Challenge 6 start: Message Signature
   const signMessage = () => {
     if (userSession.isUserSignedIn()) {
       openSignatureRequestPopup({
