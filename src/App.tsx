@@ -133,6 +133,7 @@ function App(): ReactElement {
     }
   };
 
+  // Challenge 6 start: Message Signature
   const signMessage = () => {
     if (userSession.isUserSignedIn()) {
       openSignatureRequestPopup({
@@ -280,6 +281,8 @@ function App(): ReactElement {
       </div>
     </div>
   );
+
+  // Challenge 6 end: Message Signature
 
   // return (
   // <div className="text-center">
