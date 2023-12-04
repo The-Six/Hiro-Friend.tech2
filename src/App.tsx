@@ -44,10 +44,10 @@ function App(): ReactElement {
     onFinish: (data: FinishedAuthData) => {
       // Handle successful authentication here
       let userData = data.userSession.loadUserData();
-      setAddress(userData.profile.stxAddress.mainnet); // or .testnet for testnet
+      // setAddress(userData.profile.stxAddress.mainnet); // or .testnet for testnet
       // setAddress(userData.profile.stxAddress.testnet); // or .testnet for testnet
       // Challenge 5: UI Integration
-      // setAddress(userData.profile.stxAddress.devnet); // or .testnet for testnet
+      setAddress(userData.profile.stxAddress.devnet); // or .testnet for testnet
     },
     onCancel: () => {
       // Handle authentication cancellation here
@@ -71,16 +71,16 @@ function App(): ReactElement {
     // Challenge 5: UI Integration
     // const senderAddress = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
 
-    // const contractAddress = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
-    // const contractName = 'keys';
-    // const functionName = 'is-keyholder';
+    const contractAddress = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+    const contractName = 'keys';
+    const functionName = 'is-keyholder';
 
-    // const functionArgs = [standardPrincipalCV(senderAddress)];
+    const functionArgs = [standardPrincipalCV(senderAddress)];
 
-    const contractAddress = 'SP000000000000000000002Q6VF78';
-    const contractName = 'pox-3';
-    const functionName = 'is-pox-active';
-    const functionArgs = [uintCV(10)];
+    // const contractAddress = 'SP000000000000000000002Q6VF78';
+    // const contractName = 'pox-3';
+    // const functionName = 'is-pox-active';
+    // const functionArgs = [uintCV(10)];
 
     try {
       const result = await callReadOnlyFunction({
@@ -93,6 +93,39 @@ function App(): ReactElement {
       });
       setHasFetchedReadOnly(true);
       console.log(cvToValue(result));
+    } catch (error) {
+      console.error('Error fetching read-only function:', error);
+    }
+  };
+
+  const checkIsKeyHolder = async (senderAddress: string) => {
+    // Define your contract details here
+    // Challenge 5: UI Integration
+    // const senderAddress = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
+
+    const contractAddress = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+    const contractName = 'keys';
+    const functionName = 'is-keyholder';
+
+    const functionArgs = [standardPrincipalCV(senderAddress)];
+
+    // const contractAddress = 'SP000000000000000000002Q6VF78';
+    // const contractName = 'pox-3';
+    // const functionName = 'is-pox-active';
+    // const functionArgs = [uintCV(10)];
+
+    try {
+      const result = await callReadOnlyFunction({
+        network,
+        contractAddress,
+        contractName,
+        functionName,
+        functionArgs,
+        senderAddress
+      });
+      setHasFetchedReadOnly(true);
+      console.log(cvToValue(result));
+      return cvToValue(result);
     } catch (error) {
       console.error('Error fetching read-only function:', error);
     }
@@ -113,10 +146,19 @@ function App(): ReactElement {
           if (verified) {
             // The signature is verified, so now we can check if the user is a keyholder
             setIsSignatureVerified(true);
-            console.log(
-              'Address derived from public key',
-              getAddressFromPublicKey(publicKey, network.version)
-            );
+            // The signature is verified, so now we can check if the user is a keyholder
+            const address = getAddressFromPublicKey(publicKey, network.version);
+            const isKeyHolder = await checkIsKeyHolder(address);
+            if (isKeyHolder) {
+              // The user is a keyholder, so they are authorized to access the chatroom
+              console.log(
+                'The user is a keyholder, so they are authorized to access the chatroom'
+              );
+            }
+            // console.log(
+            //   'Address derived from public key',
+            //   getAddressFromPublicKey(publicKey, network.version)
+            // );
           }
         }
       });
@@ -201,40 +243,70 @@ function App(): ReactElement {
               </div>
             )}
           </div>
+          {userSession.isUserSignedIn() ? (
+            <div className="text-center">
+              <h1 className="text-xl">Friend.tech</h1>
+              <div>
+                <button onClick={disconnectWallet}>Disconnect Wallet</button>
+              </div>
+              <div>
+                <p>
+                  {address} is {isKeyHolder ? '' : 'not'} a key holder
+                </p>
+                <div>
+                  <input
+                    type="text"
+                    id="address"
+                    name="address"
+                    placeholder="Enter address"
+                  />
+                  <button onClick={() => checkIsKeyHolder(address)}>
+                    Check Key Holder
+                  </button>
+                  <div>
+                    <p>Key Holder Check Result: {isKeyHolder ? 'Yes' : 'No'}</p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                Sign this message: <button onClick={signMessage}>Sign</button>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
   );
 
   // return (
-  //   <div className="text-center">
-  //     <h1 className="text-xl">Friend.tech</h1>
+  // <div className="text-center">
+  //   <h1 className="text-xl">Friend.tech</h1>
+  //   <div>
+  //     <button onClick={disconnectWallet}>Disconnect Wallet</button>
+  //   </div>
+  //   <div>
+  //     <p>
+  //       {address} is {isKeyHolder ? '' : 'not'} a key holder
+  //     </p>
   //     <div>
-  //       <button onClick={disconnectWallet}>Disconnect Wallet</button>
-  //     </div>
-  //     <div>
-  //       <p>
-  //         {address} is {isKeyHolder ? '' : 'not'} a key holder
-  //       </p>
+  //       <input
+  //         type="text"
+  //         id="address"
+  //         name="address"
+  //         placeholder="Enter address"
+  //       />
+  //       <button onClick={() => checkIsKeyHolder(address)}>
+  //         Check Key Holder
+  //       </button>
   //       <div>
-  //         <input
-  //           type="text"
-  //           id="address"
-  //           name="address"
-  //           placeholder="Enter address"
-  //         />
-  //         <button onClick={() => checkIsKeyHolder(address)}>
-  //           Check Key Holder
-  //         </button>
-  //         <div>
-  //           <p>Key Holder Check Result: {isKeyHolder ? 'Yes' : 'No'}</p>
-  //         </div>
+  //         <p>Key Holder Check Result: {isKeyHolder ? 'Yes' : 'No'}</p>
   //       </div>
   //     </div>
-  //     <div>
-  //       Sign this message: <button onClick={signMessage}>Sign</button>
-  //     </div>
   //   </div>
+  //   <div>
+  //     Sign this message: <button onClick={signMessage}>Sign</button>
+  //   </div>
+  // </div>
   // );
 }
 
