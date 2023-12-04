@@ -6,6 +6,10 @@
 (define-data-var protocolFeePercent uint u200) ;; or subjectFeePercent
 (define-data-var protocolFeeDestination principal tx-sender)
 
+(define-data-var subjectFeePercent uint u200)
+
+;; Defining Contract Owner
+(define-data-var contractOwner principal tx-sender) 
 ;; Calculating Key Prices
 (define-read-only (get-price (supply uint) (amount uint))
   (let
@@ -122,7 +126,56 @@
   )
 )
 
+
 ;; Challenge 2 end.
+
+
+;; Challenge 4 Start: Access Control
+
+(define-public (set-protocol-fee-percent (feePercent uint))
+  ;; Check if the caller is the contractOwner
+  ;; Update the protocolFeePercent value
+  (if (is-eq tx-sender (var-get contractOwner))
+    (begin
+      (var-set protocolFeePercent feePercent)
+      (ok true)
+    )
+    (err "Only the contract owner can set the protocol fee percent")
+  )
+) 
+
+(define-public (set-subject-fee-percent (feePercent uint))
+  ;; Check if the caller is the contractOwner
+  ;; Update the subjectFeePercent value
+  (if (is-eq tx-sender (var-get contractOwner))
+    (begin
+      (var-set subjectFeePercent feePercent)
+      (ok true)
+    )
+    (err "Only the contract owner can set the subject fee percent")
+  )
+)
+
+(define-public (set-protocol-fee-destination (destination principal))
+  ;; Check if the caller is the contractOwner
+  ;; Update the protocolFeeDestination value
+  (if (is-eq tx-sender (var-get contractOwner))
+    (begin
+      (var-set protocolFeeDestination destination)
+      (ok true)
+    )
+    (err "Only the contract owner can set the protocol fee destination")
+  )
+)
+
+;; This is for testing purposes only
+(define-read-only (var-get-protocolFeePercent)
+  ;; Return the protocolFeePercent value
+  (var-get protocolFeePercent)
+)
+;; Test end.
+
+;; Challenge 4 End: Access Control.
 
 ;; title: keys
 ;; version:

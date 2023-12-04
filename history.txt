@@ -29,3 +29,12 @@ get-keys-supply
 (contract-call? .keys get-price u0 u30)
 (contract-call? .keys buy-keys 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys u5)
 (contract-call? .keys buy-keys 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys u400)
+(contract-call? .keys set-protocol-fee-percent u15)
+(contract-call? .keys set-subject-fee-percent u15)
+(contract-call? .keys set-protocol-fee-destination 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.keys)
+(contract-call? .keys protocolFeePercent)
+protocolFeePercent
+(print protocolFeePercent)
+(contract-call? .keys var-get-protocolFeePercent)
+(contract-call? .keys set-protocol-fee-percent u15)
+(contract-call? .keys var-get-protocolFeePercent)
