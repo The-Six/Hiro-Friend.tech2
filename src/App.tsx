@@ -4,7 +4,8 @@ import {
   callReadOnlyFunction,
   getAddressFromPublicKey,
   uintCV,
-  cvToValue
+  cvToValue,
+  standardPrincipalCV
 } from '@stacks/transactions';
 import {
   AppConfig,
@@ -43,7 +44,9 @@ function App(): ReactElement {
     onFinish: (data: FinishedAuthData) => {
       // Handle successful authentication here
       let userData = data.userSession.loadUserData();
-      setAddress(userData.profile.stxAddress.mainnet); // or .testnet for testnet
+      // setAddress(userData.profile.stxAddress.mainnet); // or .testnet for testnet
+      // setAddress(userData.profile.stxAddress.testnet); // or .testnet for testnet
+      setAddress(userData.profile.stxAddress.devnet); // or .testnet for testnet
     },
     onCancel: () => {
       // Handle authentication cancellation here
@@ -64,11 +67,14 @@ function App(): ReactElement {
 
   const fetchReadOnly = async (senderAddress: string) => {
     // Define your contract details here
-    const contractAddress = 'SP000000000000000000002Q6VF78';
-    const contractName = 'pox-3';
-    const functionName = 'is-pox-active';
+    // Challenge 5: UI Integration
+    // const senderAddress = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
+    const contractAddress = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+    const contractName = 'keys';
+    const functionName = 'is-keyholder';
 
-    const functionArgs = [uintCV(10)];
+    // const functionArgs = [uintCV(10)];
+    const functionArgs = [standardPrincipalCV(senderAddress)];
 
     try {
       const result = await callReadOnlyFunction({
