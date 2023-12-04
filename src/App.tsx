@@ -3,7 +3,7 @@ import { StacksMainnet } from '@stacks/network';
 import {
   callReadOnlyFunction,
   getAddressFromPublicKey,
-  uintCV,
+  // uintCV,
   cvToValue,
   standardPrincipalCV
 } from '@stacks/transactions';
@@ -26,6 +26,7 @@ function App(): ReactElement {
   const [address, setAddress] = useState('');
   const [isSignatureVerified, setIsSignatureVerified] = useState(false);
   const [hasFetchedReadOnly, setHasFetchedReadOnly] = useState(false);
+  const [isKeyHolder, setIsKeyHolder] = useState(false);
 
   // Initialize your app configuration and user session here
   const appConfig = new AppConfig(['store_write', 'publish_data']);
@@ -44,10 +45,10 @@ function App(): ReactElement {
     onFinish: (data: FinishedAuthData) => {
       // Handle successful authentication here
       let userData = data.userSession.loadUserData();
-      // setAddress(userData.profile.stxAddress.mainnet); // or .testnet for testnet
+      setAddress(userData.profile.stxAddress.mainnet); // or .testnet for testnet
       // setAddress(userData.profile.stxAddress.testnet); // or .testnet for testnet
       // Challenge 5: UI Integration
-      setAddress(userData.profile.stxAddress.devnet); // or .testnet for testnet
+      // setAddress(userData.profile.stxAddress.devnet); // or .testnet for testnet
     },
     onCancel: () => {
       // Handle authentication cancellation here
@@ -63,6 +64,7 @@ function App(): ReactElement {
     if (userSession.isUserSignedIn()) {
       userSession.signUserOut('/');
       setAddress('');
+      setIsKeyHolder(false);
     }
   };
 
@@ -154,6 +156,7 @@ function App(): ReactElement {
               console.log(
                 'The user is a keyholder, so they are authorized to access the chatroom'
               );
+              setIsKeyHolder(true);
             }
             // console.log(
             //   'Address derived from public key',
