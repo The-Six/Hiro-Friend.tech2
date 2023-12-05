@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { ExternalLink } from './external-link';
 import { ArrowRight } from 'lucide-react';
 import { truncateAddress } from './lib/utils';
+// import logo from '../assets/marcoijazcodetech-coloured.png';
 
 function App(): ReactElement {
   const [address, setAddress] = useState('');
@@ -32,7 +33,7 @@ function App(): ReactElement {
   const appConfig = new AppConfig(['store_write', 'publish_data']);
   const userSession = new UserSession({ appConfig });
 
-  const message = 'Hello, Hiro Hacks!';
+  const message = 'Hello, Web3! We are Marco & Ijaz CodeTech.';
   const network = new StacksMainnet();
 
   // Define your authentication options here
@@ -173,9 +174,17 @@ function App(): ReactElement {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="mx-auto max-w-2xl px-4">
-        <div className="rounded-lg border bg-background p-8">
+        <div className="flex items-center justify-center">
+          <img
+            className="mb-4 rounded-lg"
+            src="../assets/marcoijazcodetech-coloured.png"
+            alt="logo"
+            width="150px"
+          />
+        </div>
+        <div className="rounded-lg border-2 border-white bg-stone-600 p-8 text-white">
           <h1 className="mb-2 text-lg font-semibold">Welcome to Hiro Hacks!</h1>
-          <p className="leading-normal text-muted-foreground">
+          <p className="leading-normal text-muted-foreground text-neutral-400">
             This is an open source starter template built with{' '}
             <ExternalLink href="https://docs.hiro.so/stacks.js/overview">
               Stacks.js
@@ -189,7 +198,7 @@ function App(): ReactElement {
                 <Button
                   onClick={disconnectWallet}
                   variant="link"
-                  className="h-auto p-0 text-base"
+                  className="h-auto p-0 text-base text-white"
                 >
                   1. Disconnect wallet
                   <ArrowRight size={15} className="ml-1" />
@@ -200,7 +209,7 @@ function App(): ReactElement {
               <Button
                 onClick={connectWallet}
                 variant="link"
-                className="h-auto p-0 text-base"
+                className="h-auto p-0 text-base text-white"
               >
                 1. Connect your wallet
                 <ArrowRight size={15} className="ml-1" />
@@ -210,7 +219,7 @@ function App(): ReactElement {
               <Button
                 onClick={signMessage}
                 variant="link"
-                className="h-auto p-0 text-base text-neutral-500"
+                className="h-auto p-0 text-base text-neutral-400"
               >
                 2. Sign a message
                 <ArrowRight size={15} className="ml-1" />
@@ -223,7 +232,7 @@ function App(): ReactElement {
                 <Button
                   onClick={() => fetchReadOnly(address)}
                   variant="link"
-                  className="h-auto p-0 text-base"
+                  className="h-auto p-0 text-base text-white"
                 >
                   3. Read from a smart contract
                   <ArrowRight size={15} className="ml-1" />
@@ -240,7 +249,7 @@ function App(): ReactElement {
               <div className="flex justify-between w-full">
                 <Button
                   variant="link"
-                  className="disabled h-auto p-0 text-base"
+                  className="disabled h-auto p-0 text-base text-white"
                 >
                   3. Read from a smart contract
                   <ArrowRight size={15} className="ml-1" />
@@ -248,37 +257,51 @@ function App(): ReactElement {
               </div>
             )}
           </div>
-          {userSession.isUserSignedIn() ? (
-            <div className="text-center">
-              <h1 className="text-xl">Friend.tech</h1>
+        </div>
+        {userSession.isUserSignedIn() ? (
+          <div className="text-center rounded-lg border-2 border-white bg-stone-600 p-8 text-white mt-2">
+            <h1 className="text-xl underline">Friend.tech</h1>
+            <div className="mt-4">
+              <button
+                className="border-solid border-2 border-gray-100 px-2 rounded"
+                onClick={disconnectWallet}
+              >
+                Disconnect Wallet
+              </button>
+            </div>
+            <div>
+              <p>
+                {address} is {isKeyHolder ? '' : 'not'} a key holder
+              </p>
               <div>
-                <button onClick={disconnectWallet}>Disconnect Wallet</button>
-              </div>
-              <div>
-                <p>
-                  {address} is {isKeyHolder ? '' : 'not'} a key holder
-                </p>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  placeholder="Enter address"
+                />
+                <button
+                  className="border-solid border-2 border-gray-100 px-2 rounded ml-2"
+                  onClick={() => checkIsKeyHolder(address)}
+                >
+                  Check Key Holder
+                </button>
                 <div>
-                  <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    placeholder="Enter address"
-                  />
-                  <button onClick={() => checkIsKeyHolder(address)}>
-                    Check Key Holder
-                  </button>
-                  <div>
-                    <p>Key Holder Check Result: {isKeyHolder ? 'Yes' : 'No'}</p>
-                  </div>
+                  <p>Key Holder Check Result: {isKeyHolder ? 'Yes' : 'No'}</p>
                 </div>
               </div>
-              <div>
-                Sign this message: <button onClick={signMessage}>Sign</button>
-              </div>
             </div>
-          ) : null}
-        </div>
+            <div>
+              Sign this message:{' '}
+              <button
+                className="border-solid border-2 border-gray-100 px-2 rounded"
+                onClick={signMessage}
+              >
+                Sign
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );
